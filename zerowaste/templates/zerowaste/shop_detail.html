@@ -1,0 +1,34 @@
+{% extends 'zerowaste/base.html' %} {% load django_bootstrap5 %} {% load static
+%} {% block content %}
+
+<div class="row">
+  <div id="info_list_search" class="col-md-12">
+    <img src="{{shop_detail.img}}" height="200" width="200" />
+    <h2 style="color: red">{{ shop_detail.name }}</h2>
+    <h4>주소 : {{shop_detail.address}}</h4>
+    <h4>전화번호 : {{shop_detail.tel}}</h4>
+    <h4>카테고리 : {{shop_detail.category}}</h4>
+    <h4>상세정보 : {{shop_detail.subject}}</h4>
+    <h4>시설정보 : {{shop_detail.facility}}</h4>
+    {% if shop_detail.page3 == None %} {% if shop_detail.page2 == None %}
+    <h4>페이지1 : {{shop_detail.page1}}</h4>
+    {% else %}
+    <h4>페이지1 : {{shop_detail.page1}}</h4>
+    <h4>페이지2 : {{shop_detail.page2}}</h4>
+    {% endif %} {% elif shop_detail.page3 != None %}
+    <h4>페이지1 : {{shop_detail.page1}}</h4>
+    <h4>페이지2 : {{shop_detail.page2}}</h4>
+    <h4>페이지3 : {{shop_detail.page3}}</h4>
+    {% endif %}
+
+    <h4>월요일 : {{shop_detail.mon}}</h4>
+    <h4>화요일 : {{shop_detail.tue}}</h4>
+    <h4>수요일 : {{shop_detail.wed}}</h4>
+    <h4>목요일 : {{shop_detail.thu}}</h4>
+    <h4>금요일 : {{shop_detail.fri}}</h4>
+    <h4>토요일 : {{shop_detail.sat}}</h4>
+    <h4>일요일 : {{shop_detail.sun}}</h4>
+    <br />
+  </div>
+</div>
+{% endblock %}

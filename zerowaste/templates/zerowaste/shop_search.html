@@ -1,0 +1,118 @@
+{% extends 'zerowaste/base.html' %} {% load django_bootstrap5 %}
+{% load static %} {% block content %}
+
+<form action="{% url 'search_result' %}" method="GET">
+  {% csrf_token %}
+  <div class="row" style="margin-bottom: 15px">
+    <div class="col-lg-5">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="search_key"
+          value="{{search_key}}"
+          placeholder="looking for ..."
+        />
+        <h4>{{search_key}}</h4>
+        <span class="input-group-btn">
+          <input class="btn-btn-default" type="submit" value="Search" />
+        </span>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% comment %} 요청을 처리할 url {% endcomment %}
+<form action="{% url 'info_result' %}" method="GET" class="search-form">
+  {% csrf_token %}
+  <table>
+    <tbody>
+      <tr>
+        <th>
+          <div>분류</div>
+          <div>품목</div>
+          <div>시설정보</div>
+          <div>영업요일</div>
+        </th>
+        <td>
+          <div>
+            <div>
+              <input type="radio" name="category" value="종합생활용품">종합생활용품</input>
+              <input type="radio" name="category" value="공방">공방</input>
+              <input type="radio" name="category" value="카페">카페</input>
+              <input type="radio" name="category" value="서점">서점</input>
+              <input type="radio" name="category" value="식료품">식료품</input>
+              <input type="radio" name="category" value="화장품">화장품</input>
+            </div>
+            <div>
+              <input type="checkbox" name="subject" value="#욕실">욕실</input>
+              <input type="checkbox" name="subject" value="#주방">주방</input>
+              <input type="checkbox" name="subject" value="#리필">리필</input>
+              <input type="checkbox" name="subject" value="#공방">공방</input>
+              <input type="checkbox" name="subject" value="#카페">카페</input>
+              <input type="checkbox" name="subject" value="#식료품">식료품</input>
+              <input type="checkbox" name="subject" value="#수거">수거</input>
+              <input type="checkbox" name="subject" value="#악세사리">악세사리</input>
+              <input type="checkbox" name="subject" value="#의류">의류</input>
+              <input type="checkbox" name="subject" value="#화장품">화장품</input>
+              <input type="checkbox" name="subject" value="#문구">문구</input>
+              <input type="checkbox" name="subject" value="#위생">위생</input>
+              <input type="checkbox" name="subject" value="#도서">도서</input>
+              <input type="checkbox" name="subject" value="#가전">가전</input>
+            </div>
+            <div>
+              <input type="checkbox" name="facility" value="#WIFI">WIFI</input>
+              <input type="checkbox" name="facility" value="#주차">주차</input>
+              <input type="checkbox" name="facility" value="#반려동물동반">반려동물동반</input>
+              <input type="checkbox" name="facility" value="#예약">예약</input>
+              <input type="checkbox" name="facility" value="#포장">포장</input>
+              <input type="checkbox" name="facility" value="#남/녀화장실구분">남/녀화장실구분</input>
+              <input type="checkbox" name="facility" value="#단체석">단체석</input>
+              <input type="checkbox" name="facility" value="#장애인편의시설">장애인편의시설</input>
+              <input type="checkbox" name="facility" value="#방문접수/출장">방문접수/출장</input>
+              <input type="checkbox" name="facility" value="#배달">배달</input>
+              <input type="checkbox" name="facility" value="#유아놀이방">유아놀이방</input>
+              <input type="checkbox" name="facility" value="#발렛파킹">발렛파킹</input>
+            </div>
+            <div>
+              <input type="checkbox" name="day" value="day_mon">월요일</input>
+              <input type="checkbox" name="day" value="day_tue">화요일</input>
+              <input type="checkbox" name="day" value="day_wed">수요일</input>
+              <input type="checkbox" name="day" value="day_thu">목요일</input>
+              <input type="checkbox" name="day" value="day_fri">금요일</input>
+              <input type="checkbox" name="day" value="day_sat">토요일</input>
+              <input type="checkbox" name="day" value="day_sun">일요일</input>
+            </div>
+            <input type="submit" value="name" name="{{sheet}}" />
+            <div id='result'></div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<br />
+{% for info in info_list %}
+<a href="{% url 'shop_detail' info.id %}">
+  <div class="card w-75">
+    <div class="card-body">
+      <h5 class="card-title">{{ info.name }}</h5>
+      <p class="card-text">{{ info.address }}</p>
+      <p class="card-text">{{ info.tel }}</p>
+    </div>
+  </div><br>
+</a>
+{% endfor %}
+
+{% for info in all %}
+<a href="{% url 'shop_detail' info.id %}">
+  <div class="card w-75">
+    <div class="card-body">
+      <h5 class="card-title">{{ info.name }}</h5>
+      <p class="card-text">{{ info.address }}</p>
+      <p class="card-text">{{ info.tel }}</p>
+    </div>
+  </div><br>
+</a>
+{% endfor %}
+{% endblock %}
