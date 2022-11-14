@@ -1,9 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Shop
+from .models import Nkreview
 from django.db.models import Q
+
 
 info_list = Shop.objects.all().order_by('id')
 search_list = Shop.objects.all().order_by('id')
+Nkreview_list = Nkreview.objects.all().order_by('id')
 
 
 def base(request):
@@ -13,6 +16,8 @@ def base(request):
     )
 
 # --------------- 검색 --------------------
+
+
 def search(request):
     global info_list
     global search_list
@@ -31,11 +36,7 @@ def info(request):
     category_one = request.GET.get('category', None)
     subject_list = request.GET.getlist('subject', None)
     facility_list = request.GET.getlist('facility', None)
-    day_list = request.GET.getlist('day',None)
-    print(category_one)
-    print(subject_list)
-    print(facility_list)
-    print(day_list)
+
     q = Q()
     if category_one:
         # q &= Q(category__in=category_one)
@@ -48,9 +49,7 @@ def info(request):
     if facility_list:
         for i in range(0, len(facility_list)):
             q.add(Q(facility__icontains=facility_list[i]), q.AND)
-    if day_list:
-        for i in range(0, len(day_list)):
-            print('day_list : ' , day_list[i])
+
     print(q)
     products = Shop.objects.filter(q)
     for product in products:
@@ -58,6 +57,9 @@ def info(request):
     print('all : ', all)
     return render(request, 'zerowaste/shop_search.html', {'all': all})
 
-def detail(request, id):
+
+def shop_detail(request, id):
     shop_detail = get_object_or_404(Shop, pk=id)
-    return render(request, 'zerowaste/shop_detail.html', {'shop_detail':shop_detail})
+    # id와 똑같은 Nkreview 불러오기
+    review_detail = Nkreview.objects.filter(shop=id)
+    return render(request, 'zerowaste/shop_detail.html', {'shop_detail': shop_detail, 'review_detail':review_detail})

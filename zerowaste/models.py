@@ -65,3 +65,6 @@ class Oreview(models.Model):
     content = models.TextField()
     register_date = models.DateField()
     update_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.member}::{self.content}'

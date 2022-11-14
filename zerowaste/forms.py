@@ -1,9 +1,10 @@
 from django import forms
-from .models import Shop, Oreview
+from .models import Shop, Oreview, Nkreview
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Oreview
         # fields = '__all__'
         exclude = ('article', 'user',)
-        
+

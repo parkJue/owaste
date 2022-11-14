@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "zerowaste",
-    'django_bootstrap5',
+    "django_bootstrap5"
 ]
 
 MIDDLEWARE = [
@@ -75,16 +75,16 @@ WSGI_APPLICATION = "owaste.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = { 
-   'default': { 
-       'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'owaste', 
-        'USER': 'owaste', 
-        'PASSWORD': 'secret', 
-        'HOST': 'localhost', 
-        'PORT': '3306', 
-        'OPTIONS': {'charset': 'utf8mb4'}, # 이모티콘 허용
-     } 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'owaste',
+        'USER': 'owaste',
+        'PASSWORD': 'secret',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {'charset': 'utf8mb4'},  # 이모티콘 허용
+    }
 }
 
 
