@@ -169,7 +169,6 @@ def review_new(request, shop_pk):
         "form": form,
     })
 
-
 @login_required
 def review_edit(request, shop_pk, pk):
     review = get_object_or_404(Oreview, pk=pk)
@@ -184,4 +183,15 @@ def review_edit(request, shop_pk, pk):
 
     return render(request, "zerowaste/review_form.html", {
         "form": form,
+    })
+
+@login_required
+def review_delete(request, shop_pk, pk):
+    review = get_object_or_404(Oreview, pk=pk)
+
+    if request.method == "POST":
+        review.delete()
+        return redirect(f"/owaste/detail/{shop_pk}")
+    return render(request, "zerowaste/review_confirm_delete.html", {
+        "review": review,
     })

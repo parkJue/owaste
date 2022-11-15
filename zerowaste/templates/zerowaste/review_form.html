@@ -1,7 +1,13 @@
-<form action="" method="post">
+{% extends 'zerowaste/base.html' %} {% load django_bootstrap5 %} {% load static
+%} {% block content %}
+<form action="" method="post" class="mb-3 row">
   {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <input type="submit" />
+  {% comment %} <div class="container-fluid row justify-content-center align-items-center"> {% endcomment %}
+  <div class="justify-content-center">
+    <table>
+      {% bootstrap_form form %}
+    </table>
+  </div>  
+  <input type="submit" value="수정" class="btn btn-primary rounded-pill btn-block shadow-sm"/>
 </form>
+{% endblock %}
