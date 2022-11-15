@@ -1,5 +1,7 @@
-{% extends 'zerowaste/base.html' %} {% load django_bootstrap5 %} {% load static
-%} {% block content %}
+{% extends 'zerowaste/base.html' %} 
+{% load django_bootstrap5 %} 
+{% load static %} 
+{% block content %}
 
 <div class="row">
   <div id="info_list_search" class="col-md-12">
@@ -10,15 +12,17 @@
     <h4>카테고리 : {{shop_detail.category}}</h4>
     <h4>상세정보 : {{shop_detail.subject}}</h4>
     <h4>시설정보 : {{shop_detail.facility}}</h4>
-    {% if shop_detail.page3 == None %} {% if shop_detail.page2 == None %}
-    <h4>페이지1 : {{shop_detail.page1}}</h4>
+    {% if shop_detail.page3 == '' %}
+      {% if shop_detail.page2 == '' %}
+        <h4>페이지1 : {{shop_detail.page1}}</h4>
+      {% else %}
+        <h4>페이지1 : {{shop_detail.page1}}</h4>
+        <h4>페이지2 : {{shop_detail.page2}}</h4>
+      {% endif %} 
     {% else %}
-    <h4>페이지1 : {{shop_detail.page1}}</h4>
-    <h4>페이지2 : {{shop_detail.page2}}</h4>
-    {% endif %} {% elif shop_detail.page3 != None %}
-    <h4>페이지1 : {{shop_detail.page1}}</h4>
-    <h4>페이지2 : {{shop_detail.page2}}</h4>
-    <h4>페이지3 : {{shop_detail.page3}}</h4>
+      <h4>페이지1 : {{shop_detail.page1}}</h4>
+      <h4>페이지2 : {{shop_detail.page2}}</h4>
+      <h4>페이지3 : {{shop_detail.page3}}</h4>
     {% endif %}
 
     <h4>월요일 : {{shop_detail.mon}}</h4>
