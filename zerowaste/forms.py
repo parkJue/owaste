@@ -1,6 +1,10 @@
 from django import forms
-from .models import Shop, Oreview, Nkreview
+from .models import Shop, Oreview, Nkreview, Ask
 
+class AskForm(forms.ModelForm):
+    class Meta:
+        model = Ask
+        fields = "__all__"
 
 # FIXME: 지워주세요.
 class CommentForm(forms.ModelForm):

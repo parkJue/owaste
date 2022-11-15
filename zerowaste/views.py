@@ -1,6 +1,6 @@
+from .models import Campaign, Shop, Member, Nkreview, Oreview, Ask
+from .forms import AskForm
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Shop
-from .models import Nkreview, Oreview
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .forms import CommentForm, OreviewForm
@@ -9,15 +9,45 @@ info_list = Shop.objects.all().order_by('id')
 search_list = Shop.objects.all().order_by('id')
 Nkreview_list = Nkreview.objects.all().order_by('id')
 
+# 문의하기
+def ask_new(request):
+    if request.method == "POST":
+        form = AskForm(request.POST)
+        if form.is_valid():
+            ask = form.save()
+            # return redirect(f"/diary/{memory.pk}/")
+            # return redirect(memory.get_absolute_url())
+            return redirect(ask)
+    else:
+        form = AskForm()
 
-def base(request):
+    return render(request, "owaste/index.html", {
+        "form": form,
+    })
+
+
+# index
+def index(request):
+    shop_map = Shop.objects.all().order_by('-id')
     return render(
         request,
-        'zerowaste/base.html'
+        'owaste/index.html',
+        {
+            'shop_map' : shop_map
+        }
     )
 
-# --------------- 검색 --------------------
+# campaign_list
 
+def campaign_list(request):
+    campaign_list = Campaign.objects.all().order_by('-id')
+    return render(
+        request,
+        'owaste/campaign_list.html',
+        {
+            'campaign_list' : campaign_list
+        }
+    )
 
 def search(request):
 
@@ -94,7 +124,7 @@ def search(request):
 
     # ---
     # search_list들을 info_list라는 이름으로 shop_search에 넘김
-    return render(request, "zerowaste/shop_search.html", {'info_list': search_list,
+    return render(request, "owaste/shop_search.html", {'info_list': search_list,
                                                           'search_key': search_key,
                                                           'categories': category_one,
                                                           'subjects': subject,
@@ -126,7 +156,7 @@ def info(request):
     for product in products:
         all.append(product)
     print('all : ', all)
-    return render(request, 'zerowaste/shop_search.html', {'all': all})
+    return render(request, 'owaste/shop_search.html', {'all': all})
 
 
 def shop_detail(request, id):
@@ -147,7 +177,7 @@ def shop_detail(request, id):
         'oreview_qs': oreview_qs,
         'review_detail': review_detail,
     }
-    return render(request, 'zerowaste/shop_detail.html', context)
+    return render(request, 'owaste/shop_detail.html', context)
 
 
 @login_required
@@ -165,7 +195,7 @@ def review_new(request, shop_pk):
     else:
         form = OreviewForm()
 
-    return render(request, "zerowaste/review_form.html", {
+    return render(request, "owaste/review_form.html", {
         "form": form,
     })
 
@@ -181,7 +211,7 @@ def review_edit(request, shop_pk, pk):
     else:
         form = OreviewForm(instance=review)
 
-    return render(request, "zerowaste/review_form.html", {
+    return render(request, "owaste/review_form.html", {
         "form": form,
     })
 
@@ -192,6 +222,6 @@ def review_delete(request, shop_pk, pk):
     if request.method == "POST":
         review.delete()
         return redirect(f"/owaste/detail/{shop_pk}")
-    return render(request, "zerowaste/review_confirm_delete.html", {
+    return render(request, "owaste/review_confirm_delete.html", {
         "review": review,
     })

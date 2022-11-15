@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django_bootstrap5',
     "zerowaste",
-    "django_bootstrap5"
+    'common.apps.CommonConfig',
 ]
 
 MIDDLEWARE = [
@@ -75,16 +76,16 @@ WSGI_APPLICATION = "owaste.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'owaste',
-        'USER': 'owaste',
-        'PASSWORD': 'secret',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {'charset': 'utf8mb4'},  # 이모티콘 허용
-    }
+DATABASES = { 
+   'default': { 
+       'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'owaste', 
+        'USER': 'owaste', 
+        'PASSWORD': 'secret', 
+        'HOST': 'localhost', 
+        'PORT': '3306', 
+        'OPTIONS': {'charset': 'utf8mb4'}, # 이모티콘 허용
+     } 
 }
 
 
@@ -110,21 +111,46 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True
-
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [ BASE_DIR / 'static',]
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR/'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+INTERNAL_IPS = ['127.0.0.1']
+
+# LOGIN/LOGOUT 후 이동하는 URL
+LOGIN_REDIRECT_URL = '/owaste/index'
+LOGOUT_REDIRECT_URL = '/owaste/index'
+
+# 문의사항 이메일로 보내기
+# from environ import Env
+ 
+# env = Env()
+# env_path = BASE_DIR / ".env"
+# if env_path.exists():
+#     print('road_env')
+#     with env_path.open("rt", encoding="utf8") as f:
+#         env.read_env(f, overwrite=True)
+
+# EMAIL_HOST = env.str("EMAIL_HOST")
+# EMAIL_PORT = env.str("EMAIL_PORT")
+# EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
+# EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
