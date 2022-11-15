@@ -1,28 +1,25 @@
-{% extends 'zerowaste/base.html' %} 
-{% load django_bootstrap5 %} 
-{% load static %} 
-{% block content %}
+{% extends 'zerowaste/base.html' %} {% load django_bootstrap5 %} {% load static
+%} {% block content %}
 
 <div class="row">
   <div id="info_list_search" class="col-md-12">
     <img src="{{shop_detail.img}}" height="200" width="200" />
     <h2 style="color: red">{{ shop_detail.name }}</h2>
+    <h3>{{shop_detail.category}}</h3>
     <h4>주소 : {{shop_detail.address}}</h4>
     <h4>전화번호 : {{shop_detail.tel}}</h4>
     <h4>카테고리 : {{shop_detail.category}}</h4>
     <h4>상세정보 : {{shop_detail.subject}}</h4>
     <h4>시설정보 : {{shop_detail.facility}}</h4>
-    {% if shop_detail.page3 == '' %}
-      {% if shop_detail.page2 == '' %}
-        <h4>페이지1 : {{shop_detail.page1}}</h4>
-      {% else %}
-        <h4>페이지1 : {{shop_detail.page1}}</h4>
-        <h4>페이지2 : {{shop_detail.page2}}</h4>
-      {% endif %} 
+    {% if shop_detail.page3 == '' %} {% if shop_detail.page2 == '' %}
+    <h4>페이지1 : {{shop_detail.page1}}</h4>
     {% else %}
-      <h4>페이지1 : {{shop_detail.page1}}</h4>
-      <h4>페이지2 : {{shop_detail.page2}}</h4>
-      <h4>페이지3 : {{shop_detail.page3}}</h4>
+    <h4>페이지1 : {{shop_detail.page1}}</h4>
+    <h4>페이지2 : {{shop_detail.page2}}</h4>
+    {% endif %} {% else %}
+    <h4>페이지1 : {{shop_detail.page1}}</h4>
+    <h4>페이지2 : {{shop_detail.page2}}</h4>
+    <h4>페이지3 : {{shop_detail.page3}}</h4>
     {% endif %}
 
     <h4>월요일 : {{shop_detail.mon}}</h4>
@@ -35,29 +32,55 @@
     <br />
   </div>
 </div>
+{% comment %}
+<form action="{% url 'articles:comments_create' article.pk %}" method="POST">
+  {% csrf_token %} {% bootstrap_form form %}
+  <button class="btn btn-primary">작성</button>
+</form>
+{% endcomment %}
 
+<!-- 리뷰 (댓글)-->
 <div id="comment-area">
   <div class="card my-4">
     <h5 class="card-header">Leave a Comment:</h5>
     <div class="card-body">
-      <form>
+      <form
+        action="/owaste/detail/{{ shop_detail.pk }}/reviews/new/"
+        method="post"
+        novalidate
+      >
+        {% csrf_token %} {% bootstrap_form oreview_form %} {% comment %}
         <div class="form-group">
           <textarea class="form-control" rows="3"></textarea>
         </div>
+        {% endcomment %}
         <button type="submit" class="btn btn-primary">submit</button>
       </form>
     </div>
   </div>
+
+  <ul>
+    {% for review in oreview_qs %}
+    <li>
+      {{ review.content }} by {{ review.user.username }}
+      <a
+        href="/owaste/detail/{{ shop_detail.pk }}/reviews/{{ review.pk }}/edit/"
+        >수정</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+
   <div class="row">
     <div id="info_list_search" class="col-md-12">
-      {% for i in review_detail %}
-      {% if i.source == '네이버맵' %}
-        <h4 style="color: green">{{ i.source }}에서 작성된 리뷰입니다.</h4>
+      {% for i in review_detail %} {% if i.source == '네이버맵' %}
+      <h4 style="color: green">{{ i.source }}에서 작성된 리뷰입니다.</h4>
       {% else %}
       <h4 style="color: yellow">{{ i.source }}에서 작성된 리뷰입니다.</h4>
       {% endif %}
       <h5>닉네임 : {{i.nick}}</h5>
       <p>내용 : {{i.content}}</p>
+
       <br />
       {% endfor %}
     </div>

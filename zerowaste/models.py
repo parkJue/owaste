@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 # FK XXX
@@ -58,13 +59,18 @@ class Nkreview(models.Model):
 
 
 class Oreview(models.Model):
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    source = models.CharField(max_length=10)
+    # member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    source = models.CharField(max_length=10, default='owaste')
     content = models.TextField()
-    register_date = models.DateField()
-    update_date = models.DateField(blank=True, null=True)
+    register_date = models.DateField(auto_now_add=True)
+    update_date = models.DateField(auto_now=True)
 
     def __str__(self):
-        return f'{self.member}::{self.content}'
+        return self.content
+
+    class Meta:
+        ordering = ["-id"]

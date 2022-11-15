@@ -2,7 +2,6 @@
 {% load static %} {% block content %}
 
 <form action="{% url 'search_result' %}" method="GET">
-  {% csrf_token %}
   <div class="row" style="margin-bottom: 15px">
     <div class="col-lg-5">
       <div class="input-group">
@@ -11,7 +10,7 @@
           class="form-control"
           name="search_key"
           value="{{search_key}}"
-          placeholder="looking for ..."
+          placeholder="검색하고 싶은 매장 이름을 입력하세요"
         />
         {% comment %} <h4>{{search_key}}</h4> {% endcomment %}
         <span class="input-group-btn">
@@ -32,6 +31,7 @@
           <div>분류</div>
           <div>품목</div>
           <div>시설정보</div>
+          <div>요일</div>
         </th>
         <td>
           <div>
@@ -74,7 +74,15 @@
               <input type="checkbox" name="facility" value="#유아놀이방" {% if '#유아놀이방' in facilities %} checked {% else %} '' {% endif %}>유아놀이방</input>
               <input type="checkbox" name="facility" value="#발렛파킹" {% if '#발렛파킹' in facilities %} checked {% else %} '' {% endif %}>발렛파킹</input>
             </div>
-            {% comment %} <input type="submit" value="name" name="{{sheet}}" /> {% endcomment %}
+            <div>
+              <input type="checkbox" name="day" value="day_mon" {% if 'day_mon' in days %} checked {% else %} '' {% endif %}>월요일</input>
+              <input type="checkbox" name="day" value="day_tue" {% if 'day_tue' in days %} checked {% else %} '' {% endif %}>화요일</input>
+              <input type="checkbox" name="day" value="day_wed" {% if 'day_wed' in days %} checked {% else %} '' {% endif %}>수요일</input>
+              <input type="checkbox" name="day" value="day_thu" {% if 'day_thu' in days %} checked {% else %} '' {% endif %}>목요일</input>
+              <input type="checkbox" name="day" value="day_fri" {% if 'day_fri' in days %} checked {% else %} '' {% endif %}>금요일</input>
+              <input type="checkbox" name="day" value="day_sat" {% if 'day_sat' in days %} checked {% else %} '' {% endif %}>토요일</input>
+              <input type="checkbox" name="day" value="day_sun" {% if 'day_sun' in days %} checked {% else %} '' {% endif %}>일요일</input>
+            </div>
             <div id='result'></div>
           </div>
         </td>
@@ -85,7 +93,7 @@
 <br />
 {% for info in info_list %}
 <a href="{% url 'shop_detail' info.id %}">
-  <div class="card w-75">
+  <div class="card w-50">
     <div class="card-body">
       <h5 class="card-title">{{ info.name }}</h5>
       <p class="card-text">{{ info.address }}</p>

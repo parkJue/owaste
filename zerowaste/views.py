@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Shop
-from .models import Nkreview
+from .models import Nkreview, Oreview
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .forms import CommentForm
+from .forms import CommentForm, OreviewForm
 
 info_list = Shop.objects.all().order_by('id')
 search_list = Shop.objects.all().order_by('id')
@@ -25,11 +26,10 @@ def search(request):
     search_key = request.GET.get('search_key', '')
     print(search_key)
 
-    all = []
     category_one = request.GET.get('category', '')
     subject_list = request.GET.getlist('subject', '')
     facility_list = request.GET.getlist('facility', '')
-
+    offday_list = request.GET.getlist("day", '')
     q = Q()
 
     if search_key != '':
@@ -46,6 +46,16 @@ def search(request):
         if facility_list:
             for i in range(0, len(facility_list)):
                 q.add(Q(facility__icontains=facility_list[i]), q.AND)
+        if offday_list:
+            week_names = ["day_mon", "day_tue", "day_wed",
+                          "day_thu", "day_fri", "day_sat", "day_sun"]
+            field_names = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+            fields_dict = dict(zip(week_names, field_names))
+
+            for day in offday_list:
+                field_name = fields_dict[day]
+                conditions = {field_name: '휴무'}
+                q.add(~Q(**conditions), q.AND)
 
         search_list = search_list.filter(q)
 
@@ -62,19 +72,34 @@ def search(request):
             for i in range(0, len(facility_list)):
                 q.add(Q(facility__icontains=facility_list[i]), q.AND)
 
+        if offday_list:
+            week_names = ["day_mon", "day_tue", "day_wed",
+                          "day_thu", "day_fri", "day_sat", "day_sun"]
+            field_names = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+            fields_dict = dict(zip(week_names, field_names))
+
+            for day in offday_list:
+                field_name = fields_dict[day]
+                conditions = {field_name: '휴무'}
+                q.add(~Q(**conditions), q.AND)
+
         search_list = search_list.filter(q)
 
     subject = ','.join(subject_list)
     facility = ','.join(facility_list)
-
+    day = ','.join(offday_list)
     print(subject)
 
+    # ----
+
+    # ---
     # search_list들을 info_list라는 이름으로 shop_search에 넘김
     return render(request, "zerowaste/shop_search.html", {'info_list': search_list,
                                                           'search_key': search_key,
                                                           'categories': category_one,
                                                           'subjects': subject,
-                                                          'facilities': facility})
+                                                          'facilities': facility,
+                                                          'days': day})
 
 
 def info(request):
@@ -107,11 +132,56 @@ def info(request):
 def shop_detail(request, id):
     shop_detail = get_object_or_404(Shop, pk=id)
     # id와 똑같은 Nkreview 불러오기
-    form = CommentForm()
-    review_detail = Nkreview.objects.filter(shop=id)
+    # form = CommentForm()
+
+    oreview_form = OreviewForm()
+
+    oreview_qs = Oreview.objects.filter(
+        shop=shop_detail).select_related("user")
+
+    review_detail = Nkreview.objects.filter(
+        shop=id)  # detail은 1개의 의미. _list, _qs 목록
     context = {
         'shop_detail': shop_detail,
-        'form': form,
+        'oreview_form': oreview_form,
+        'oreview_qs': oreview_qs,
         'review_detail': review_detail,
     }
     return render(request, 'zerowaste/shop_detail.html', context)
+
+
+@login_required
+def review_new(request, shop_pk):
+    shop = get_object_or_404(Shop, pk=shop_pk)
+
+    if request.method == "POST":
+        form = OreviewForm(request.POST, request.FILES)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.shop = shop
+            review.user = request.user
+            review.save()
+            return redirect(f"/owaste/detail/{shop_pk}")  # TODO: URL Reverse
+    else:
+        form = OreviewForm()
+
+    return render(request, "zerowaste/review_form.html", {
+        "form": form,
+    })
+
+
+@login_required
+def review_edit(request, shop_pk, pk):
+    review = get_object_or_404(Oreview, pk=pk)
+
+    if request.method == "POST":
+        form = OreviewForm(request.POST, request.FILES, instance=review)
+        if form.is_valid():
+            review = form.save()
+            return redirect(f"/owaste/detail/{shop_pk}")  # TODO: URL Reverse
+    else:
+        form = OreviewForm(instance=review)
+
+    return render(request, "zerowaste/review_form.html", {
+        "form": form,
+    })
