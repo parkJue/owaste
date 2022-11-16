@@ -169,8 +169,7 @@ def shop_detail(request, id):
     oreview_qs = Oreview.objects.filter(
         shop=shop_detail).select_related("user")
 
-    review_detail = Nkreview.objects.filter(
-        shop=id)  # detail은 1개의 의미. _list, _qs 목록
+    review_detail = Nkreview.objects.filter(shop=id)  # detail은 1개의 의미. _list, _qs 목록
     context = {
         'shop_detail': shop_detail,
         'oreview_form': oreview_form,

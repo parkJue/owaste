@@ -1,6 +1,6 @@
 {% extends 'owaste/base.html' %} {% load django_bootstrap5 %} {% load static
   %} {% block content %}
-  
+
   <div class="row">
     <div id="info_list_search" class="col-md-12">
       <img src="{{shop_detail.img}}" height="200" width="200" />
@@ -32,12 +32,6 @@
       <br />
     </div>
   </div>
-  {% comment %}
-  <form action="{% url 'articles:comments_create' article.pk %}" method="POST">
-    {% csrf_token %} {% bootstrap_form form %}
-    <button class="btn btn-primary">작성</button>
-  </form>
-  {% endcomment %}
   <button type="submit" class="btn btn-dark" onclick="location.href='{% url 'search_result' %}';">목록으로</button>
   
   {{ shop_detail.name }}
